@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'gurunabi_api.dart';
 import 'package:flutter/material.dart';
+import 'roulette.dart';
 
 class ResultRestaurantPage extends StatefulWidget{
   final String keyword;
@@ -34,7 +35,9 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
       var result = jsonDecode(body);
       setState((){
         restaurants = Restaurants.fromJson(result);
-//        print(restaurants.restaurants[1].images.shopImage1);
+        for(int i = 0; i < restaurants.restaurants.length; i++) {
+          _check.add(false);
+        }
       });
     });
   }
@@ -51,26 +54,58 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
         child: CircularProgressIndicator(),
       );
     } else {
-      setState(() {
-        for(int i = 0; i < restaurants.restaurants.length; i++) {
-          _check.add(false);
-        }
-      });
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
+
           if (index == 0){
-            print(_check);
-            return OutlineButton(
-              padding: EdgeInsets.only(left: 140.0,top: 15.0,right: 140.0,bottom: 15.0),
-              child: Text(
-                "ルーレット作成",
-                style: TextStyle(
-                    fontSize: 13.0,
-                  color: Colors.blue
+
+            for(int i = 0; i < restaurants.restaurants.length; i++){
+              if(_check[i]){
+                print(restaurants.restaurants[i].name);
+            }
+          }
+            return Column(
+              children: <Widget>[
+
+              RaisedButton(
+                padding: EdgeInsets.only(left: 150.0,top: 5.0,right: 150.0,bottom: 5.0),
+                child: Text("ルーレット作成"),
+              color: Colors.blue,
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Basic())
+                );
+              },
+            ),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(color: Colors.black38),
+                    bottom: BorderSide(color: Colors.black38),
+                  ),
                 ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 32,
+                    backgroundImage: NetworkImage(restaurants.restaurants[index].images.shopImage1),
+                  ),
+                  title: Text(restaurants.restaurants[index].name),
+                  subtitle: Text(restaurants.restaurants[index].category),
+                  trailing: Checkbox(
+                    value:_check[index],
+                      onChanged: (bool value){
+                      setState(() {
+                        _check[index] = value;
+                    });
+              }),
               ),
-              onPressed: () {},
-            );
+              )
+            ],
+          );
+//
           } else{
             return Container(
               decoration: BoxDecoration(
@@ -112,7 +147,6 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
         child: _getCardChild(),
         onRefresh: _refresh,
       ),
-
     );
   }
 }
