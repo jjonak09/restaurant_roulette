@@ -15,6 +15,7 @@ class ResultRestaurantPage extends StatefulWidget{
 class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
 
   final String keyword;
+  double checkCount = 0;
   List<bool> _check = List<bool>();
 
   _ResultRestaurantPageState({@required this.keyword});
@@ -58,12 +59,18 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
         itemBuilder: (BuildContext context, int index) {
 
           if (index == 0){
+            checkCount = 0;
+            var restaurantList = [];
 
             for(int i = 0; i < restaurants.restaurants.length; i++){
               if(_check[i]){
                 print(restaurants.restaurants[i].name);
+                checkCount++;
+                restaurantList.add(restaurants.restaurants[i].name);
             }
           }
+            print(checkCount);
+            print(restaurantList);
             return Column(
               children: <Widget>[
 
@@ -75,7 +82,7 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
               onPressed: () {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Basic())
+                    MaterialPageRoute(builder: (context) => Roulette(num:checkCount,restaurantList:restaurantList))
                 );
               },
             ),
