@@ -6,32 +6,38 @@ import 'roulette.dart';
 
 class ResultRestaurantPage extends StatefulWidget{
   final String keyword;
-  ResultRestaurantPage({@required this.keyword});
+  String target;
+  ResultRestaurantPage({@required this.keyword,@required this.target});
 
   @override
-  _ResultRestaurantPageState createState() => _ResultRestaurantPageState(keyword: keyword);
+  _ResultRestaurantPageState createState() => _ResultRestaurantPageState(keyword: keyword,target: target);
 }
 
 class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
 
   final String keyword;
+  String target;
+
   double checkCount = 0;
   List<bool> _check = List<bool>();
 
-  _ResultRestaurantPageState({@required this.keyword});
+  _ResultRestaurantPageState({@required this.keyword,@required this.target});
 
   Restaurants restaurants;
 
   Future<void> _refresh() async{
     await Future.sync((){
-      requestAPI(keyword);
+      requestAPI(keyword,target);
     });
   }
 
-  void requestAPI(String keyword){
+  void requestAPI(String keyword,String target){
     var url = 'https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=02757f7670819b9c3cb0d89b36c65775&address=';
-
-    http.get(url + keyword).then((response){
+    url = url + keyword;
+    if (target != '1'){
+      url = url + '&category_s=' + target;
+    }
+    http.get(url).then((response){
       var body = response.body;
       var result = jsonDecode(body);
       setState((){
@@ -74,24 +80,73 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
             return Column(
               children: <Widget>[
 
-              RaisedButton(
-                padding: EdgeInsets.only(left: 150.0,top: 5.0,right: 150.0,bottom: 5.0),
-                child: Text("ルーレット作成"),
-              color: Colors.blue,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Roulette(num:checkCount,restaurantList:restaurantList))
-                );
-              },
-            ),
+                FlatButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  color: Colors.blueAccent,
+                  padding: EdgeInsets.only(left: 130.0,top: 10.0,right: 140.0,bottom: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.search,color: Colors.white),
+
+                      Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                      ),
+                      Text(
+                        "別の条件で検索",
+                        style: TextStyle(fontSize: 13.0,color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+
+                  },
+                ),
+
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.0),
+              ),
+
+              Text(
+              'お店を選択してください',
+                style: TextStyle(fontSize: 20.0),
+              ),
+
+              Text(
+                  '${checkCount.toInt()}/8',
+                style: TextStyle(fontSize: 16.0),
+              ),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 3.0),
+                ),
+
+                RaisedButton(
+                  padding: EdgeInsets.only(left: 130.0,top: 10.0,right: 130.0,bottom: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.create),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.0),
+                      ),
+                      Text("ルーレット作成"),
+                    ],
+                  ),
+                  color: Colors.redAccent,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Roulette(num:checkCount,restaurantList:restaurantList))
+                    );
+                  },
+                ),
 
               Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    right: BorderSide(color: Colors.black38),
-                    bottom: BorderSide(color: Colors.black38),
+//                    top: BorderSide(color: Colors.black38),
+//                    right: BorderSide(color: Colors.black38),
+//                    bottom: BorderSide(color: Colors.black38),
                   ),
                 ),
                 child: ListTile(
@@ -105,7 +160,11 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
                     value:_check[index],
                       onChanged: (bool value){
                       setState(() {
-                        _check[index] = value;
+                        if(checkCount < 8) {
+                          _check[index] = value;
+                        }else if(checkCount >= 8){
+                          _check[index] = false;
+                        }
                     });
               }),
               ),
@@ -117,8 +176,8 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
             return Container(
               decoration: BoxDecoration(
                 border: Border(
-                  right: BorderSide(color: Colors.black38),
-                  bottom: BorderSide(color: Colors.black38),
+//                  right: BorderSide(color: Colors.black38),
+//                  bottom: BorderSide(color: Colors.black38),
                 ),
               ),
               child: ListTile(
@@ -132,7 +191,11 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
                     value:_check[index],
                     onChanged: (bool value){
                       setState(() {
-                        _check[index] = value;
+                        if(checkCount < 8){
+                          _check[index] = value;
+                        }else if(checkCount >= 8){
+                          _check[index] = false;
+                        }
                       });
                     }),
               ),
@@ -149,7 +212,7 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text('一覧')),
+      appBar: AppBar(title: Text('レストラン一覧')),
       body: RefreshIndicator(
         child: _getCardChild(),
         onRefresh: _refresh,

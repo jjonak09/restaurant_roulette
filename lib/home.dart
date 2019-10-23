@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/address_search.dart';
+import 'package:flutter_app/location_search.dart';
 
 class MyApp extends StatelessWidget{
 
@@ -18,7 +19,7 @@ class HomeScreen extends StatelessWidget{
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: Text('検索画面'),
         ),
         body:
         Center(
@@ -31,23 +32,50 @@ class HomeScreen extends StatelessWidget{
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 70.0),
                 ),
-                OutlineButton(
-                  padding: EdgeInsets.only(left: 140.0,top: 15.0,right: 140.0,bottom: 15.0),
-                  child: Text(
-                    "現在地から検索",
-                    style: TextStyle(fontSize: 13.0),
+                FlatButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  color: Colors.lightBlue,
+                  padding: EdgeInsets.only(left: 130.0,top: 15.0,right: 140.0,bottom: 15.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.home,color: Colors.white),
 
+                      Padding(
+                        padding: EdgeInsets.only(right: 10.0),
+                      ),
+                      Text(
+                        "現在地から検索",
+                        style: TextStyle(fontSize: 13.0,color: Colors.white),
+                      ),
+                    ],
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LocationSearchPage())
+                    );
+                  },
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                 ),
-                OutlineButton(
+                FlatButton(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  color: Colors.lightBlue,
                   padding: EdgeInsets.only(left: 130.0,top: 15.0,right: 130.0,bottom: 15.0),
-                  child: Text(
-                    "住所/カテゴリから",
-                    style: TextStyle(fontSize: 13.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.search,color: Colors.white),
+
+                      Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                      ),
+
+                      Text(
+                        "住所/カテゴリから",
+                        style: TextStyle(fontSize: 13.0,color: Colors.white),
+                      ),
+                    ],
                   ),
                   onPressed: () {
                     Navigator.push(

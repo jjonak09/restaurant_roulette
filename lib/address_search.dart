@@ -11,6 +11,7 @@ class _AddressSearchPageState extends State<AddressSearchPage>{
   final controller = TextEditingController();
   String _selected = '1';
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,35 +50,85 @@ class _AddressSearchPageState extends State<AddressSearchPage>{
                 padding: EdgeInsets.symmetric(vertical: 20.0),
               ),
 
+              Text('カテゴリを選択してください'),
+
               DropdownButton<String>(
                 onChanged: (String value) => popupSelected(value),
                 value: _selected,
+
                 items: <DropdownMenuItem<String>>[
                   const DropdownMenuItem<String>(
                     value: '1',
-                      child: Text('One'),
+                      child: Text('指定なし'),
                   ),
                   const DropdownMenuItem<String>(
-                    value: '2',
-                    child: Text('Two'),
+                    value: 'RSFST09004',
+                    child: Text('居酒屋'),
                   ),
                   const DropdownMenuItem<String>(
-                    value: '3',
-                    child: Text('Three'),
+                    value: 'RSFST02006',
+                    child: Text('郷土料理'),
                   ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST03000',
+                    child: Text('寿司'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST04001',
+                    child: Text('鍋'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST05001',
+                    child: Text('焼肉'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST06009',
+                    child: Text('ステーキ'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST01001',
+                    child: Text('定食'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST01015',
+                    child: Text('和食'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST08008',
+                    child: Text('ラーメン'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST14007',
+                    child: Text('中華'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST11001',
+                    child: Text('フレンチ'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST11002',
+                    child: Text('イタリアン'),
+                  ),
+                  const DropdownMenuItem<String>(
+                    value: 'RSFST15001',
+                    child: Text('韓国料理'),
+                  ),
+
                 ],
               ),
             ],
           ),
         ),
+
         floatingActionButton: FloatingActionButton.extended(
           elevation: 4.0,
           icon: Icon(Icons.search),
-          label: Text('       検索              '),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          label: Text('                 検索                       '),
           onPressed: (){
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ResultRestaurantPage(keyword: controller.text)),
+                MaterialPageRoute(builder: (context) => ResultRestaurantPage(keyword: controller.text,target: _selected)),
             );
           },
         ),
@@ -89,7 +140,7 @@ class _AddressSearchPageState extends State<AddressSearchPage>{
   void popupSelected(String value){
     setState(() {
       _selected = value;
-//      print(_selected);
+      print(_selected);
 //      print(controller.text);
     });
   }
