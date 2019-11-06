@@ -16,7 +16,9 @@ class _AddressSearchPageState extends State<AddressSearchPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('住所/カテゴリから検索')
+        title: Text('住所/カテゴリから検索',style: TextStyle(color: Colors.redAccent),),
+        backgroundColor: Colors.white,
+        centerTitle: true,
       ),
       body:
         Center(
@@ -122,6 +124,7 @@ class _AddressSearchPageState extends State<AddressSearchPage>{
 
         floatingActionButton: FloatingActionButton.extended(
           elevation: 4.0,
+          backgroundColor: Colors.red,
           icon: Icon(Icons.search),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           label: Text('                 検索                       '),

@@ -19,8 +19,11 @@ class HomeScreen extends StatelessWidget{
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text('検索画面'),
+          title: Text('検索画面',style: TextStyle(color: Colors.redAccent),),
+          backgroundColor: Colors.white,
+          centerTitle: true,
         ),
+
         body:
         Center(
             child:
@@ -34,7 +37,7 @@ class HomeScreen extends StatelessWidget{
                 ),
                 FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  color: Colors.lightBlue,
+                  color: Colors.red,
                   padding: EdgeInsets.only(left: 130.0,top: 15.0,right: 140.0,bottom: 15.0),
                   child: Row(
                     children: <Widget>[
@@ -61,7 +64,7 @@ class HomeScreen extends StatelessWidget{
                 ),
                 FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  color: Colors.lightBlue,
+                  color: Colors.red,
                   padding: EdgeInsets.only(left: 130.0,top: 15.0,right: 130.0,bottom: 15.0),
                   child: Row(
                     children: <Widget>[

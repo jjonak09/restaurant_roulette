@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'gurunabi_api.dart';
 import 'package:flutter/material.dart';
 import 'roulette.dart';
+import 'another_search.dart';
+import 'restaurant_detail.dart';
 
 class ResultRestaurantPage extends StatefulWidget{
   final String keyword;
@@ -17,6 +19,7 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
 
   final String keyword;
   String target;
+  var restaurantList = [];
 
   double checkCount = 0;
   List<bool> _check = List<bool>();
@@ -66,7 +69,7 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
 
           if (index == 0){
             checkCount = 0;
-            var restaurantList = [];
+            restaurantList = [];
 
             for(int i = 0; i < restaurants.restaurants.length; i++){
               if(_check[i]){
@@ -82,7 +85,7 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
 
                 FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  color: Colors.blueAccent,
+                  color: Colors.red[200],
                   padding: EdgeInsets.only(left: 130.0,top: 10.0,right: 140.0,bottom: 10.0),
                   child: Row(
                     children: <Widget>[
@@ -98,7 +101,10 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
                     ],
                   ),
                   onPressed: () {
-
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AnotherSearchPage())
+                    );
                   },
                 ),
 
@@ -106,39 +112,44 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
                 padding: EdgeInsets.symmetric(vertical: 5.0),
               ),
 
-              Text(
-              'お店を選択してください',
-                style: TextStyle(fontSize: 20.0),
-              ),
+//              Text(
+//              'お店を選択してください',
+//                style: TextStyle(fontSize: 20.0),
+//              ),
+
+//              FilterChip(
+//                label: Text('hello'),
+//                onSelected: (bool v){print('selected');},
+//              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Wrap(
+                    children: <Widget>[
+                      for(var restaurant in restaurantList) Chip(
+                        label: Text(restaurant, style: TextStyle(fontSize: 8.0)),
+                        onDeleted: (){
+                          for(int i = 0; i < restaurants.restaurants.length; i++){
+                            if(restaurant == restaurants.restaurants[i].name){
+                              setState(() {
+                                _check[i] = false;
+                                checkCount -= 1;
+                              });
+                            }
+                          }
+                      },)
+                 ],
+                )
+                ],
+          ),
 
               Text(
-                  '${checkCount.toInt()}/8',
+                  'レストランを選んでください。${checkCount.toInt()}/8',
                 style: TextStyle(fontSize: 16.0),
               ),
 
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 3.0),
-                ),
-
-                RaisedButton(
-                  padding: EdgeInsets.only(left: 130.0,top: 10.0,right: 130.0,bottom: 10.0),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.create),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.0),
-                      ),
-                      Text("ルーレット作成"),
-                    ],
-                  ),
-                  color: Colors.redAccent,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Roulette(num:checkCount,restaurantList:restaurantList))
-                    );
-                  },
                 ),
 
               Container(
@@ -167,6 +178,19 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
                         }
                     });
               }),
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RestaurantDetailPage(
+                            name:restaurants.restaurants[index].name,
+                            address:restaurants.restaurants[index].address,
+                            openTime:restaurants.restaurants[index].openTime,
+                            urlMobile:restaurants.restaurants[index].urlMobile,
+                            prLong:restaurants.restaurants[index].prs.prLong,
+                            image:restaurants.restaurants[index].images.shopImage1
+                        ))
+                    );
+                  },
               ),
               )
             ],
@@ -198,6 +222,19 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
                         }
                       });
                     }),
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RestaurantDetailPage(
+                      name:restaurants.restaurants[index].name,
+                      address:restaurants.restaurants[index].address,
+                      openTime:restaurants.restaurants[index].openTime,
+                      urlMobile:restaurants.restaurants[index].urlMobile,
+                      prLong:restaurants.restaurants[index].prs.prLong,
+                      image:restaurants.restaurants[index].images.shopImage1
+                    ))
+                  );
+                },
               ),
             );
           }
@@ -212,7 +249,33 @@ class _ResultRestaurantPageState extends State<ResultRestaurantPage>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text('レストラン一覧')),
+      appBar: AppBar(
+        title: Text('レストラン一覧',style: TextStyle(color: Colors.redAccent),),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      persistentFooterButtons: <Widget>[
+        RaisedButton(
+          padding: EdgeInsets.only(left: 130.0,top: 10.0,right: 130.0,bottom: 10.0),
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.create),
+              Padding(
+                padding: EdgeInsets.only(left: 5.0),
+              ),
+              Text("ルーレット作成"),
+            ],
+          ),
+          color: Colors.redAccent,
+          textColor: Colors.white,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Roulette(num:checkCount,restaurantList:restaurantList))
+            );
+          },
+        ),
+      ],
       body: RefreshIndicator(
         child: _getCardChild(),
         onRefresh: _refresh,

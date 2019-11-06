@@ -30,17 +30,23 @@ class Restaurants {
 class Restaurant{
   final String name;
   final String category;
+  final String address;
+  final String openTime;
   final String urlMobile;
   Image images;
+  PR prs;
 
 
-  Restaurant({this.name,this.category,this.urlMobile,this.images});
+  Restaurant({this.name,this.category,this.urlMobile,this.images,this.address,this.prs,this.openTime});
 
   factory Restaurant.fromJson(Map<String,dynamic> json){
     return Restaurant(
         name:json['name'],
         category:json['category'],
         urlMobile:json['url_mobile'],
+        address:json['address'],
+        openTime:json['opentime'],
+        prs: PR.fromJson(json['pr']),
         images: Image.fromJson(json['image_url'])
     );
   }
@@ -62,6 +68,20 @@ class Image{
     );
   }
 
+}
+
+class PR{
+  final String prShort;
+  final String prLong;
+
+  PR({this.prShort,this.prLong});
+
+  factory PR.fromJson(Map<String,dynamic> json){
+    return PR(
+      prShort: json['pr_short'],
+      prLong: json['pr_long']
+    );
+  }
 }
 
 //class Restaurant{
