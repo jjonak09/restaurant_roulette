@@ -1,112 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-
-//class Roulette extends StatelessWidget{
-//  final double num;
-//  Roulette({@required this.num});
-//  @override
-//  Widget build(BuildContext context) {
-//    // TODO: implement build
-//    return Scaffold(
-//      appBar: AppBar(title: Text('ルーレット'),),
-//      body:Center(
-//        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          children: <Widget>[
-//
-//            CustomPaint(
-//              child: Container(
-//                height: 400,
-//                width: 360,
-//              ),
-//              painter: CirclePainter(nbnum:this.num),
-//            ),
-//
-//          ],
-//        ),
-//      )
-//    );
-//  }
-//}
-
-//class Roulette extends StatefulWidget {
-//  @override
-//  final double num;
-//  Roulette({@required this.num});
-//  _RouletteState createState() => _RouletteState(num:num);
-//}
-
-//class _RouletteState extends State<Roulette> with SingleTickerProviderStateMixin{
-//  final double num;
-//  double rotateRadius = 0.3925;
-//  double rotateGap = 10.0;
-//  int count = 0;
-//  double sumRotateRadius = 0.0;
-//
-//  Animation<double> _animation;
-//  AnimationController controller;
-//  _RouletteState({@required this.num});
-//
-//  @override
-//  void initState(){
-//    super.initState();
-//    controller = AnimationController(
-//      duration: Duration(milliseconds: 5000),vsync: this
-//    );
-//    controller.forward();
-//    controller.addStatusListener((status){
-//      if(status == AnimationStatus.completed){
-//        controller.reset();
-//      } else if(status == AnimationStatus.dismissed){
-//        controller.forward();
-//      }
-//    });
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//
-//    _animation = Tween(begin: 0.0,end: rotateGap).animate(controller)
-//      ..addListener((){
-//        setState(() {
-//          count ++;
-////          print(count);
-//          sumRotateRadius += rotateRadius;
-//          print(sumRotateRadius);
-//          if(sumRotateRadius == 6.28){
-//            sumRotateRadius = 0.0;
-//          }
-//        });
-//      });
-//
-//    return Scaffold(
-//        body:Center(
-//          child: Column(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              CustomPaint(
-//                child: Container(
-//                  height: 400,
-//                  width: 360,
-//                ),
-//                painter: CirclePainter(nbnum: num,sumRotateRadius:sumRotateRadius),
-//              ),
-//            ],
-//          )
-//        )
-//    );
-//  }
-//
-//  @override
-//  void dispose() {
-//    controller.dispose();
-//    super.dispose();
-//  }
-//
-//}
-
-
 class Roulette extends StatefulWidget {
   @override
   final double num;
@@ -118,6 +12,7 @@ class Roulette extends StatefulWidget {
 
 class _RouletteState extends State<Roulette> with SingleTickerProviderStateMixin{
   final double num;
+  bool value = true;
   final List restaurantList;
 
   double rotateRadius = 0.3925;
@@ -142,8 +37,6 @@ class _RouletteState extends State<Roulette> with SingleTickerProviderStateMixin
     _animation = tween.animate(controller)
       ..addListener((){
         setState(() {
-          count ++;
-//          print(count);
           sumRotateRadius += rotateRadius;
           print(sumRotateRadius);
           if(sumRotateRadius == 6.28){
@@ -162,6 +55,7 @@ class _RouletteState extends State<Roulette> with SingleTickerProviderStateMixin
      case AnimationStatus.completed:
      case AnimationStatus.forward:
        controller.reset();
+       print('stop');
        break;
    }
  }
@@ -189,11 +83,21 @@ class _RouletteState extends State<Roulette> with SingleTickerProviderStateMixin
                   painter: CirclePainter(nbnum: num,sumRotateRadius:sumRotateRadius,restaurantList: restaurantList),
                 ),
 
-                RaisedButton(
+                if(value)RaisedButton(
                   child: Text('start'),
-                  onPressed: () => startAnimation(),
+                  onPressed: (){
+                    value = false;
+                    startAnimation();
+                  }
                 ),
 
+                if(!value)RaisedButton(
+                    child: Text('stop'),
+                    onPressed: (){
+                      value = true;
+                      startAnimation();
+                    }
+                ),
               ],
             )
         )
@@ -263,14 +167,14 @@ class CirclePainter extends CustomPainter {
 //    print(sumRotateRadius);
 
 
-    canvas.drawPath(getWheelPath(wheelSize, 0 + sumRotateRadius, radius), getColoredPaint(Colors.red));
-    canvas.drawPath(getWheelPath(wheelSize, radius + sumRotateRadius, radius), getColoredPaint(Colors.purple));
-    canvas.drawPath(getWheelPath(wheelSize, radius * 2 + sumRotateRadius, radius), getColoredPaint(Colors.blue));
-    canvas.drawPath(getWheelPath(wheelSize, radius * 3 + sumRotateRadius, radius), getColoredPaint(Colors.green));
-    canvas.drawPath(getWheelPath(wheelSize, radius * 4 + sumRotateRadius, radius), getColoredPaint(Colors.yellow));
-    canvas.drawPath(getWheelPath(wheelSize, radius * 5 + sumRotateRadius, radius), getColoredPaint(Colors.orange));
-    canvas.drawPath(getWheelPath(wheelSize, radius * 6 + sumRotateRadius, radius), getColoredPaint(Colors.brown));
-    canvas.drawPath(getWheelPath(wheelSize, radius * 7 + sumRotateRadius, radius), getColoredPaint(Colors.pink));
+    canvas.drawPath(getWheelPath(wheelSize, 1 + sumRotateRadius, radius), getColoredPaint(Colors.red));
+    canvas.drawPath(getWheelPath(wheelSize, radius + (1 + sumRotateRadius), radius), getColoredPaint(Colors.purple));
+    canvas.drawPath(getWheelPath(wheelSize, (radius) * 2 + (1 + sumRotateRadius), radius), getColoredPaint(Colors.blue));
+    canvas.drawPath(getWheelPath(wheelSize, (radius) * 3 + (1 +sumRotateRadius), radius), getColoredPaint(Colors.green));
+    canvas.drawPath(getWheelPath(wheelSize, (radius) * 4 + (1+sumRotateRadius), radius), getColoredPaint(Colors.yellow));
+    canvas.drawPath(getWheelPath(wheelSize, (radius) * 5 + (1+sumRotateRadius), radius), getColoredPaint(Colors.orange));
+    canvas.drawPath(getWheelPath(wheelSize, (radius) * 6 + (1+sumRotateRadius), radius), getColoredPaint(Colors.brown));
+    canvas.drawPath(getWheelPath(wheelSize, (radius) * 7 + (1+sumRotateRadius), radius), getColoredPaint(Colors.pink));
 
     double radian = (radius/2);
 //    print(radian);
@@ -278,7 +182,7 @@ class CirclePainter extends CustomPainter {
 
     for(int i = 0; i < nbElem; i++){
       if(i == 0){
-        radian = - radian + sumRotateRadius;
+        radian = - radian + (1+ sumRotateRadius);
       }else{
         radian = - radius;
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/address_search.dart';
 import 'package:flutter_app/location_search.dart';
+import 'package:flutter_app/login.dart';
 
 class MyApp extends StatelessWidget{
 
@@ -91,17 +92,23 @@ class HomeScreen extends StatelessWidget{
                   padding: EdgeInsets.symmetric(vertical: 70.0),
                 ),
                 RaisedButton(
-                  padding: EdgeInsets.only(left: 70.0,top: 15.0,right: 70.0,bottom: 15.0),
-                  child: Text("ログイン"),
-                  color: Colors.white,
+                  padding: EdgeInsets.only(left: 120.0,top: 15.0,right: 120.0,bottom: 15.0),
+                  child: Text("ログイン",style: TextStyle(color: Colors.white),),
+                  color: Colors.red[400],
                   shape: StadiumBorder(
-                    side: BorderSide(color: Colors.deepPurpleAccent),
+                    side: BorderSide(color: Colors.red[400]),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage())
+                    );
+                  },
                 ),
               ],
             )
-        )
+        ),
+
     );
   }
 }
